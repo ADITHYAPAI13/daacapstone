@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hustle Culture | Strategic Scheduler</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-blur"></div>
+    <main class="container">
+        <header>
+            <h1>The Hustle Culture</h1>
+            <p class="subtitle">Optimize your cognitive capital.</p>
+        </header>
+
+        <section class="glass-card editor-section">
+            <h3>Project Definition</h3>
+            <div id="project-inputs">
+                <div class="project-row">
+                    <input type="text" placeholder="Project Name" class="p-name">
+                    <input type="number" placeholder="Start Day" class="p-start">
+                    <input type="number" placeholder="End Day" class="p-end">
+                    <input type="number" placeholder="Daily Cost" class="p-cost">
+                    <input type="number" placeholder="Total Reward" class="p-reward">
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="add-project" class="btn-secondary">Add Project</button>
+                <button id="calculate-btn" class="btn-primary">Optimize Schedule</button>
+            </div>
+        </section>
+
+        <section id="results-area" class="results-hidden">
+            <div class="stats-grid">
+                <div class="glass-card stat-item">
+                    <span>Total Earnings</span>
+                    <h2 id="total-reward-display">$0</h2>
+                </div>
+            </div>
+            
+            <div class="grid-layout">
+                <div class="glass-card">
+                    <h3>Selected Projects</h3>
+                    <ul id="selected-projects-list"></ul>
+                </div>
+                <div class="glass-card">
+                    <h3>Daily Capacity Log</h3>
+                    <div id="capacity-log"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
