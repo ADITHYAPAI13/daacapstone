@@ -1,91 +1,90 @@
+/**
+ * THE HUSTLE CULTURE - CORE ENGINE
+ * Algorithmic Strategy: Brute-Force Power Set Validation
+ * Reasoning: Since N is typically < 20, 2^N is the only way to guarantee 100% 
+ * accuracy with state-dependent capacity (Fatigue Rule).
+ */
+
 document.getElementById('add-project').addEventListener('click', () => {
-    const row = document.querySelector('.project-row').cloneNode(true);
-    row.querySelectorAll('input').forEach(input => input.value = '');
-    document.getElementById('project-inputs').appendChild(row);
+    const container = document.getElementById('project-inputs');
+    const newRow = container.children[0].cloneNode(true);
+    newRow.querySelectorAll('input').forEach(i => i.value = '');
+    container.appendChild(newRow);
 });
 
-document.getElementById('calculate-btn').addEventListener('click', startOptimization);
-
-function startOptimization() {
-    // Collect Inputs
-    const projects = Array.from(document.querySelectorAll('.project-row')).map((row, i) => ({
+document.getElementById('calculate-btn').addEventListener('click', () => {
+    const rawProjects = Array.from(document.querySelectorAll('.project-row')).map((row, i) => ({
         id: i,
-        name: row.querySelector('.p-name').value || `Project ${i + 1}`,
+        name: row.querySelector('.p-name').value || `PROJ-${i+1}`,
         start: parseInt(row.querySelector('.p-start').value),
         end: parseInt(row.querySelector('.p-end').value),
         cost: parseInt(row.querySelector('.p-cost').value),
         reward: parseInt(row.querySelector('.p-reward').value)
-    })).filter(p => !isNaN(p.start) && !isNaN(p.reward) && p.reward > 0);
+    })).filter(p => !isNaN(p.start) && p.reward > 0);
 
-    if (projects.length === 0) return alert("Please enter valid project data.");
+    if (rawProjects.length === 0) return;
 
-    const maxDay = Math.max(...projects.map(p => p.end), 0);
-
-    // DAA ALGORITHM: Power Set Approach
-    // Generating all possible combinations 2^N to ensure global maximum.
-    const combinations = (arr) => arr.reduce((subsets, value) => subsets.concat(subsets.map(set => [value, ...set])), [[]]);
-    const allSchedules = combinations(projects);
+    // 1. Generate all possible project combinations
+    const getSubsets = (arr) => arr.reduce((subsets, value) => subsets.concat(subsets.map(set => [value, ...set])), [[]]);
+    const allOptions = getSubsets(rawProjects);
     
-    let bestResult = { revenue: 0, subset: [], log: [] };
+    let globalBest = { revenue: 0, subset: [], log: [] };
 
-    allSchedules.forEach(subset => {
-        const sim = simulate(subset, maxDay);
-        if (sim.isValid && sim.revenue > bestResult.revenue) {
-            bestResult = sim;
+    // 2. Validate every single world-line
+    allOptions.forEach(subset => {
+        const result = runSimulation(subset);
+        if (result.isValid && result.revenue > globalBest.revenue) {
+            globalBest = result;
         }
     });
 
-    displayResults(bestResult);
-}
+    renderDashboard(globalBest);
+});
 
-/**
- * State Validation Logic
- * Follows the "Fatigue Rule": Start 100, Recharge +80 (Max 100)
- */
-function simulate(subset, maxDay) {
-    let currentEnergy = 100;
-    let totalRevenue = 0;
-    let dailyLog = [];
+function runSimulation(subset) {
+    let energy = 100;
+    let revenue = 0;
+    let log = [];
+    
+    // Determine timeline range
+    const maxDay = subset.length > 0 ? Math.max(...subset.map(p => p.end)) : 0;
 
-    for (let day = 1; day <= maxDay; day++) {
-        const active = subset.filter(p => day >= p.start && day <= p.end);
-        const dailyCost = active.reduce((sum, p) => sum + p.cost, 0);
+    for (let d = 1; d <= maxDay; d++) {
+        const active = subset.filter(p => d >= p.start && d <= p.end);
+        const dailyCost = active.reduce((acc, p) => acc + p.cost, 0);
         
-        const energyAtStart = currentEnergy;
+        const startEnergy = energy;
+        if (dailyCost > startEnergy) return { isValid: false }; // Exhausted!
         
-        // FEASIBILITY CHECK
-        if (dailyCost > energyAtStart) return { isValid: false };
+        const endEnergy = startEnergy - dailyCost;
+        log.push({ day: d, start: startEnergy, cost: dailyCost, end: endEnergy });
         
-        const energyAtEnd = energyAtStart - dailyCost;
-        dailyLog.push({ day, start: energyAtStart, cost: dailyCost, end: energyAtEnd });
-
-        // OVERNIGHT RECHARGE
-        currentEnergy = Math.min(100, energyAtEnd + 80);
+        // Recharge 80, cap at 100
+        energy = Math.min(100, endEnergy + 80);
     }
 
-    totalRevenue = subset.reduce((sum, p) => sum + p.reward, 0);
-    return { isValid: true, revenue: totalRevenue, subset, log: dailyLog };
+    revenue = subset.reduce((acc, p) => acc + p.reward, 0);
+    return { isValid: true, revenue, subset, log };
 }
 
-function displayResults(res) {
+function renderDashboard(res) {
     const area = document.getElementById('results-area');
-    area.className = 'results-visible';
+    area.classList.remove('results-hidden');
+    area.classList.add('results-visible');
     
-    document.getElementById('total-reward-display').innerText = `$${res.revenue}`;
+    document.getElementById('total-reward-display').innerText = `$${res.revenue.toLocaleString()}`;
     
-    const list = document.getElementById('selected-projects-list');
-    list.innerHTML = res.subset.length > 0 
-        ? res.subset.map(p => `<li><strong>${p.name}</strong><br><small>Earned: $${p.reward}</small></li>`).join('')
-        : "<li>No valid schedule found.</li>";
+    document.getElementById('selected-projects-list').innerHTML = res.subset
+        .map(p => `<li><strong>${p.name}</strong><br><small style="color:var(--dim)">Yield: $${p.reward} | Impact: ${p.cost}u/day</small></li>`)
+        .join('');
 
-    const log = document.getElementById('capacity-log');
-    log.innerHTML = res.log.map(s => `
+    document.getElementById('capacity-log').innerHTML = res.log.map(l => `
         <div class="log-entry">
-            <span>Day ${s.day}</span>
-            <span style="color:var(--sage)">⚡ ${s.start} → ${s.end}</span>
-            <span style="color:var(--accent-copper)">-${s.cost}u</span>
+            <span>DAY ${l.day.toString().padStart(2, '0')}</span>
+            <span style="color:var(--green)">⚡ ${l.start}u</span>
+            <span style="color:var(--copper)">-${l.cost}u</span>
         </div>
     `).join('');
     
-    area.scrollIntoView({ behavior: 'smooth' });
+    window.scrollTo({ top: area.offsetTop - 50, behavior: 'smooth' });
 }
