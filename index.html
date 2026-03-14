@@ -3,57 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Hustle Culture | Strategy Engine</title>
+    <title>The Hustle Culture | Strategic Scheduler</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="blob"></div>
+    <div class="background-blur"></div>
     <main class="container">
         <header>
-            <h1>THE HUSTLE CULTURE</h1>
-            <p class="subtitle">Cognitive Bandwidth & Revenue Optimization</p>
+            <h1>The Hustle Culture</h1>
+            <p class="subtitle">Dynamic Resource Allocation & Fatigue Management</p>
         </header>
 
-        <section class="glass-card">
-            <div class="card-header">
-                <span>01</span>
-                <h3>Project Parameters</h3>
-            </div>
+        <section class="glass-card editor-section">
+            <h3 class="section-title">Project Pipeline</h3>
             <div id="project-inputs">
                 <div class="project-row">
-                    <input type="text" placeholder="Project ID" class="p-name">
-                    <input type="number" min="1" placeholder="Start Day" class="p-start">
-                    <input type="number" min="1" placeholder="End Day" class="p-end">
-                    <input type="number" min="0" placeholder="Daily Cost" class="p-cost">
-                    <input type="number" min="1" placeholder="Reward $" class="p-reward">
+                    <input type="text" placeholder="Project Name" class="p-name">
+                    <input type="number" placeholder="Start Day" class="p-start">
+                    <input type="number" placeholder="End Day" class="p-end">
+                    <input type="number" placeholder="Daily Cost" class="p-cost">
+                    <input type="number" placeholder="Total Reward" class="p-reward">
                 </div>
             </div>
             <div class="button-group">
-                <button id="add-project" class="btn-outline">+ Add Row</button>
-                <button id="calculate-btn" class="btn-glow">Execute Optimization</button>
+                <button id="add-project" class="btn-secondary">+ Add Project</button>
+                <button id="calculate-btn" class="btn-primary">Optimize Schedule</button>
             </div>
         </section>
 
         <section id="results-area" class="results-hidden">
-            <div class="dashboard-grid">
-                <div class="glass-card total-card">
-                    <div class="card-header"><span>02</span><h3>Net Yield</h3></div>
+            <div class="glass-card">
+                <div class="results-header">
+                    <span>Optimized Net Gain</span>
                     <h2 id="total-reward-display">$0</h2>
-                    <p id="logic-summary" style="font-size: 0.8rem; color: var(--dim);"></p>
                 </div>
                 
-                <div class="glass-card list-card">
-                    <div class="card-header"><span>03</span><h3>Optimal Strategy</h3></div>
-                    <ul id="selected-projects-list"></ul>
-                </div>
-
-                <div class="glass-card log-card">
-                    <div class="card-header"><span>04</span><h3>Energy Consumption Log</h3></div>
-                    <div class="log-header">
-                        <span>DAY</span><span>START ⚡</span><span>COST</span><span>RESTORED</span>
+                <div class="grid-layout">
+                    <div class="selection-box">
+                        <h3 class="section-title">Selected Strategy</h3>
+                        <ul id="selected-projects-list"></ul>
                     </div>
-                    <div id="capacity-log"></div>
+                    <div class="log-box">
+                        <h3 class="section-title">Energy Performance Log</h3>
+                        <div id="capacity-log"></div>
+                    </div>
                 </div>
             </div>
         </section>
