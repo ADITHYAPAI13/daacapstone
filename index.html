@@ -23,10 +23,10 @@
             <div id="project-inputs">
                 <div class="project-row">
                     <input type="text" placeholder="Project ID" class="p-name">
-                    <input type="number" placeholder="Start" class="p-start">
-                    <input type="number" placeholder="End" class="p-end">
-                    <input type="number" placeholder="Cost" class="p-cost">
-                    <input type="number" placeholder="Reward" class="p-reward">
+                    <input type="number" min="1" placeholder="Start Day" class="p-start">
+                    <input type="number" min="1" placeholder="End Day" class="p-end">
+                    <input type="number" min="0" placeholder="Daily Cost" class="p-cost">
+                    <input type="number" min="1" placeholder="Reward $" class="p-reward">
                 </div>
             </div>
             <div class="button-group">
@@ -40,6 +40,7 @@
                 <div class="glass-card total-card">
                     <div class="card-header"><span>02</span><h3>Net Yield</h3></div>
                     <h2 id="total-reward-display">$0</h2>
+                    <p id="logic-summary" style="font-size: 0.8rem; color: var(--dim);"></p>
                 </div>
                 
                 <div class="glass-card list-card">
@@ -48,7 +49,10 @@
                 </div>
 
                 <div class="glass-card log-card">
-                    <div class="card-header"><span>04</span><h3>Bandwidth Log</h3></div>
+                    <div class="card-header"><span>04</span><h3>Energy Consumption Log</h3></div>
+                    <div class="log-header">
+                        <span>DAY</span><span>START ⚡</span><span>COST</span><span>RESTORED</span>
+                    </div>
                     <div id="capacity-log"></div>
                 </div>
             </div>
