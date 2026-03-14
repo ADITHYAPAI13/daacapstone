@@ -22,10 +22,10 @@
             <div id="project-inputs">
                 <div class="project-row">
                     <input type="text" placeholder="Project Name" class="p-name">
-                    <input type="number" placeholder="Start Day" class="p-start">
-                    <input type="number" placeholder="End Day" class="p-end">
-                    <input type="number" placeholder="Daily Cost" class="p-cost">
-                    <input type="number" placeholder="Total Reward" class="p-reward">
+                    <input type="number" min="1" placeholder="Start Day" class="p-start">
+                    <input type="number" min="1" placeholder="End Day" class="p-end">
+                    <input type="number" min="0" placeholder="Daily Cost" class="p-cost">
+                    <input type="number" min="0" placeholder="Total Reward" class="p-reward">
                 </div>
             </div>
             <div class="button-group">
@@ -48,6 +48,9 @@
                     </div>
                     <div class="log-box">
                         <h3 class="section-title">Energy Performance Log</h3>
+                        <div class="log-header">
+                            <span>DAY</span><span>ENERGY FLOW</span><span>COST</span>
+                        </div>
                         <div id="capacity-log"></div>
                     </div>
                 </div>
