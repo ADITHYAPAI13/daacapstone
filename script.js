@@ -1,9 +1,3 @@
-/**
- * THE HUSTLE CULTURE - CORE ENGINE (FINAL VERIFIED VERSION)
- * Algorithmic Strategy: Exhaustive State-Space Search (Power Set)
- * Logic: State-Dependent Resource Management with Fatigue Constraints
- */
-
 // 1. UI Handler: Add New Project Rows
 document.getElementById('add-project').addEventListener('click', () => {
     const container = document.getElementById('project-inputs');
@@ -22,10 +16,6 @@ function startOptimization() {
         const endRaw = parseInt(row.querySelector('.p-end').value);
         const costRaw = parseInt(row.querySelector('.p-cost').value);
         const rewardRaw = parseInt(row.querySelector('.p-reward').value);
-
-        // LOGICAL SANITIZATION:
-        // Converts negative inputs to absolute positives.
-        // Ensures end day is never before start day.
         const start = Math.max(1, Math.abs(startRaw) || 0);
         const end = Math.max(start, Math.abs(endRaw) || 0);
         const cost = Math.abs(costRaw) || 0;
@@ -43,8 +33,6 @@ function startOptimization() {
     // Determine the timeline length
     const maxDay = Math.max(...projects.map(p => p.end), 0);
 
-    // DAA ALGORITHM: Power Set Generation (2^N)
-    // We evaluate every possible combination to guarantee the GLOBAL OPTIMUM.
     const combinations = (arr) => arr.reduce((subsets, value) => 
         subsets.concat(subsets.map(set => [value, ...set])), [[]]
     );
@@ -70,8 +58,7 @@ function startOptimization() {
 
 /**
  * THE CORE SIMULATOR (Fatigue & Recovery Logic)
- * Verifies if a worker can survive a specific project combination.
- */
+ **/
 function simulate(subset, maxDay) {
     let currentEnergy = 100; // Starting Capacity
     let dailyLog = [];
@@ -88,9 +75,7 @@ function simulate(subset, maxDay) {
         
         // WORK PHASE: Energy drains
         const energyAfterWork = energyAtStart - dailyCost;
-        
-        // RECHARGE PHASE: Recover +60 units overnight (capped at 100)
-        // Note: Using 60 instead of 80 to make "Tough Values" more challenging.
+
         const energyAfterRest = Math.min(100, energyAfterWork + 60); 
 
         dailyLog.push({ 
@@ -109,9 +94,8 @@ function simulate(subset, maxDay) {
 }
 
 /**
- * UI RENDERING
- * Injects the results into the glassmorphism dashboard.
- */
+ * UI RENDERING Injects the results into the glassmorphism dashboard.
+ **/
 function displayResults(res) {
     const area = document.getElementById('results-area');
     area.className = 'results-visible';
